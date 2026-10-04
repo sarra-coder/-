@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحدي صلاتي - بطل الصلاة الصغير | LAC TUNISIA</title>
+    <!-- Favicon / Logo -->
+    <link rel="icon" type="image/jpeg" href="7370.jpg">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Cairo & Tajawal -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            emerald: '#169b62',
+                            blue: '#008bc5',
+                            teal: '#0d9488',
+                            amber: '#f59e0b',
+                            purple: '#7c3aed',
+                            pink: '#ec4899',
+                            sky: '#0284c7',
+                            softBg: '#f0fdf4'
+                        }
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                        tajawal: ['Tajawal', 'sans-serif']
+                    },
+                    animation: {
+                        'bounce-slow': 'bounce 2s infinite',
+                        'pulse-glow': 'pulseGlow 2s infinite',
+                        'float': 'float 3s ease-in-out infinite'
+                    },
+                    keyframes: {
+                        pulseGlow: {
+                            '0%, 100%': { transform: 'scale(1)', boxShadow: '0 0 15px rgba(0, 139, 197, 0.4)' },
+                            '50%': { transform: 'scale(1.03)', boxShadow: '0 0 25px rgba(0, 139, 197, 0.8)' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-8px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f0fdf4;
+            background-image: radial-gradient(#cbd5e1 0.75px, transparent 0.75px), radial-gradient(#cbd5e1 0.75px, #f0fdf4 0.75px);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .star-shine {
+            filter: drop-shadow(0px 3px 6px rgba(245, 158, 11, 0.5));
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #10b981;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 flex flex-col pb-6">
+
+    <!-- Top Header Navigation -->
+    <header class="sticky top-0 z-40 bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600 text-white shadow-lg border-b-4 border-emerald-700">
+        <div class="max-w-4xl mx-auto px-4 py-2.5 flex justify-between items-center">
+            <!-- Logo & Title -->
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-md border-2 border-amber-300 p-1 cursor-pointer overflow-hidden transform hover:scale-105 transition" onclick="app.playFunSound()" title="LAC Logo">
+                    <img src="7370.jpg" alt="LAC Tunisia Logo" class="w-full h-full object-contain rounded-xl" onerror="this.src='https://ui-avatars.com/api/?name=LAC&background=169b62&color=fff&font-size=0.4'">
+                </div>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-black tracking-wide flex items-center gap-2">
+                        تحدي صلاتي
+                        <span class="text-[10px] md:text-xs bg-amber-300 text-emerald-950 px-2 py-0.5 rounded-full font-extrabold shadow-sm">LAC TUNISIA</span>
+                    </h1>
+                    <p class="text-xs text-emerald-100 font-medium">رحلتي الممتعة مع صلاتي كل يوم ✨</p>
+                </div>
+            </div>
+
+            <!-- Profile & Stats Quick Pill -->
+            <div class="flex items-center gap-2">
+                <!-- Stars Counter -->
+                <div id="header-stars-badge" class="flex items-center gap-1.5 bg-emerald-800/80 hover:bg-emerald-800 px-3 py-1.5 rounded-full border border-emerald-400/50 shadow-inner cursor-pointer" onclick="app.switchTab('badges')">
+                    <span class="text-xl text-amber-400 star-shine animate-pulse">⭐</span>
+                    <span id="header-stars" class="font-extrabold text-amber-300 text-lg">0</span>
+                </div>
+
+                <!-- Avatar Button -->
+                <button onclick="app.openProfileModal()" class="flex items-center gap-1 bg-white/10 hover:bg-white/20 p-1.5 rounded-2xl border border-white/30 transition">
+                    <span id="header-avatar" class="text-2xl">👦</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="max-w-4xl mx-auto w-full px-4 pt-4 flex-grow">
+
+        <!-- Top Notification Banner for Forgotten/Missed Prayers -->
+        <div id="reminder-alert-banner" class="hidden mb-4 bg-amber-50 border-2 border-amber-400 rounded-3xl p-4 shadow-md transition-all duration-300 relative overflow-hidden">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-3 relative z-10">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-amber-400 text-amber-950 flex items-center justify-center text-2xl shrink-0 animate-bounce">
+                        ⏰
+                    </div>
+                    <div>
+                        <h3 id="reminder-title" class="font-black text-amber-900 text-base">تذكير لطيف يا بطل!</h3>
+                        <p id="reminder-desc" class="text-sm text-amber-800 font-bold">يبدو أنك لم تؤدِّ صلاة الظهر بعد. هيا نصلّيها معاً للوصول للقمة! 🌟</p>
+                    </div>
+                </div>
+                <div class="flex gap-2 w-full sm:w-auto">
+                    <button id="reminder-action-btn" class="flex-1 sm:flex-none px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white font-black rounded-2xl shadow-md transition transform active:scale-95 text-sm flex items-center justify-center gap-1">
+                        <i class="fa-solid fa-check"></i> صليتها الآن!
+                    </button>
+                    <button onclick="app.closeReminderBanner()" class="px-3 py-2 bg-amber-200 hover:bg-amber-300 text-amber-900 font-bold rounded-2xl text-xs">
+                        تخطي
+                    </button>
+                </div>
+            </div>
+            <!-- Background Decorative Stars -->
+            <div class="absolute -bottom-6 -left-6 text-amber-200 text-7xl opacity-40 pointer-events-none">✨</div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="flex bg-emerald-100/80 p-1.5 rounded-3xl mb-5 shadow-inner gap-1 border border-emerald-200">
+            <button id="tab-btn-today" onclick="app.switchTab('today')" class="flex-1 py-2.5 px-3 rounded-2xl font-black text-sm transition-all flex items-center justify-center gap-2 bg-emerald-600 text-white shadow-md">
+                <i class="fa-solid fa-calendar-check text-base"></i>
+                <span>تحدي 7 أيام</span>
+            </button>
+            <button id="tab-btn-badges" onclick="app.switchTab('badges')" class="flex-1 py-2.5 px-3 rounded-2xl font-black text-sm transition-all flex items-center justify-center gap-2 text-emerald-800 hover:bg-emerald-200/60">
+                <i class="fa-solid fa-award text-base text-amber-500"></i>
+                <span>التحديات والأوسمة</span>
+            </button>
+        </div>
+
+        <!-- TAB 1: TODAY'S PRAYERS & 7-DAY CHALLENGE TRACKER -->
+        <section id="tab-today" class="space-y-5">
+
+            <!-- 7-Days Challenge Interactive Tracker -->
+            <div class="glass-card rounded-3xl p-4 md:p-5 shadow-lg border border-sky-200 bg-gradient-to-r from-emerald-50 via-teal-50 to-sky-50">
+                <div class="flex justify-between items-center mb-3">
+                    <div class="flex items-center gap-2">
+                        <span class="text-2xl animate-bounce">🏆</span>
+                        <div>
+                            <h3 class="font-black text-emerald-950 text-base md:text-lg">رحلة تحدي الأيام السبعة</h3>
+                            <p class="text-xs text-emerald-700 font-bold">أكمل صلوات أيام الأسبوع لتصبح "بطل الصلاة الأسطوري"! ✨</p>
+                        </div>
+                    </div>
+                    <span id="7day-total-badge" class="bg-sky-500 text-white font-black text-xs px-3 py-1 rounded-full shadow-sm">
+                        إنجاز التحدي: 0 من 7 أيام
+                    </span>
+                </div>
+
+                <!-- 7-Day Pills Grid -->
+                <div class="grid grid-cols-7 gap-1 md:gap-2 text-center" id="seven-days-bar">
+                    <!-- Javascript generates the 7 interactive weekday buttons here -->
+                </div>
+            </div>
+
+            <!-- Locked Day Banner (Shown when selected day is finalized) -->
+            <div id="locked-day-banner" class="hidden bg-amber-50 border-2 border-amber-300 rounded-3xl p-4 text-center shadow-md">
+                <span class="text-3xl">🔒</span>
+                <h3 class="font-black text-amber-950 text-base mt-1">هذا اليوم مغلق وتم حفظه بنجاح!</h3>
+                <p class="text-xs text-amber-800 font-bold mt-0.5">لقد أنجزت وحفظت صلوات هذا اليوم بنجاح، ولا يمكن تعديله بعد الآن يا بطل! 🌟</p>
+            </div>
+
+            <!-- Hero Progress Card -->
+            <div class="glass-card rounded-3xl p-5 md:p-6 shadow-xl border border-emerald-100 relative overflow-hidden">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4 relative z-10">
+                    
+                    <!-- Mascot & Welcome Message -->
+                    <div class="flex items-center gap-4 text-center md:text-right w-full md:w-auto">
+                        <div class="relative">
+                            <div id="user-avatar-display" class="w-16 h-16 md:w-20 md:h-20 bg-emerald-100 rounded-3xl flex items-center justify-center text-4xl md:text-5xl border-4 border-emerald-400 shadow-md">
+                                👦
+                            </div>
+                            <span id="streak-badge-mini" class="absolute -bottom-2 -right-2 bg-rose-500 text-white font-black text-xs px-2 py-0.5 rounded-full border-2 border-white shadow-md flex items-center gap-1">
+                                🔥 <span id="streak-count">0</span>
+                            </span>
+                        </div>
+                        <div>
+                            <h2 class="text-xl md:text-2xl font-black text-emerald-950 flex items-center gap-2 justify-center md:justify-start">
+                                السلام عليكم، <span id="user-name-display" class="text-emerald-600">بطل الصلاة</span>! 👋
+                            </h2>
+                            <p id="user-age-gender-tag" class="text-xs font-black text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full inline-block mt-0.5">
+                                بطل بعمر 7 سنوات
+                            </p>
+                            <p id="motivational-quote" class="text-xs md:text-sm font-bold text-slate-600 mt-1">
+                                "الصلاة نور القلب وطريق الجنة! هيا نكمل صلوات اليوم!" 🌟
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Daily Progress Bar -->
+                    <div class="w-full md:w-64 bg-slate-100 p-3.5 rounded-2xl border border-slate-200 shadow-inner">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <span class="text-xs font-black text-slate-700" id="current-day-label">إنجاز اليوم:</span>
+                            <span id="daily-progress-text" class="text-xs font-black text-emerald-600">0 من 5</span>
+                        </div>
+                        <!-- Progress Track -->
+                        <div class="w-full h-4 bg-slate-200 rounded-full overflow-hidden p-0.5 border border-slate-300">
+                            <div id="daily-progress-fill" class="h-full bg-gradient-to-r from-amber-400 via-emerald-500 to-teal-500 rounded-full transition-all duration-500 w-0"></div>
+                        </div>
+                        <div class="flex justify-between items-center mt-2 text-[11px] font-bold text-slate-500">
+                            <span>هدف اليوم: 5/5 🏆</span>
+                            <span id="daily-stars-earned" class="text-amber-600 font-extrabold">+0 نجمة</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Date & Day Selector Header -->
+                <div class="mt-4 pt-4 border-t border-slate-200/80 flex justify-between items-center flex-wrap gap-2">
+                    <div class="flex items-center gap-2">
+                        <span class="text-emerald-700 font-black text-sm flex items-center gap-1">
+                            <i class="fa-solid fa-calendar-day"></i> اليوم المحدد:
+                        </span>
+                        <span id="current-date-str" class="text-slate-800 font-extrabold text-sm bg-emerald-50 px-3 py-1 rounded-xl border border-emerald-200">
+                            اليوم الأول في التحدي
+                        </span>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <button onclick="app.triggerAllPrayersSim()" class="text-xs bg-emerald-100 hover:bg-emerald-200 text-emerald-800 px-3 py-1.5 rounded-xl font-bold transition">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> تجربة إكمال هذا اليوم
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- The 5 Daily Prayers List -->
+            <div class="grid grid-cols-1 gap-3.5" id="prayers-container">
+                <!-- Dynamic Javascript rendering of prayer cards -->
+            </div>
+
+            <!-- Save Actions Bar: Temporary Save & End-of-Day Finalize Button -->
+            <div class="glass-card rounded-3xl p-4 md:p-5 border-2 border-emerald-200 shadow-lg flex flex-col sm:flex-row items-center justify-between gap-3 bg-gradient-to-r from-emerald-50 to-teal-50">
+                <div class="flex items-center gap-2 w-full sm:w-auto">
+                    <button id="btn-temp-save" onclick="app.saveDraft()" class="w-full sm:w-auto px-5 py-3 bg-teal-500 hover:bg-teal-600 text-white font-black rounded-2xl shadow-md transition transform active:scale-95 text-sm flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        <span>حفظ مؤقت 💾</span>
+                    </button>
+                </div>
+
+                <div class="w-full sm:w-auto flex items-center gap-2">
+                    <button id="btn-finalize-day" onclick="app.openFinalizeModal()" class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-amber-950 font-black rounded-2xl shadow-lg transition transform active:scale-95 text-sm flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-lock"></i>
+                        <span id="btn-finalize-label">حفظ آخر اليوم وإغلاقه 🔒</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Extra Daily Motivation / Hadith Box for Kids -->
+            <div class="bg-gradient-to-r from-sky-400 to-indigo-500 rounded-3xl p-5 text-white shadow-lg relative overflow-hidden">
+                <div class="flex items-start gap-4 relative z-10">
+                    <div class="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center text-2xl shrink-0">
+                        💡
+                    </div>
+                    <div>
+                        <h4 class="font-black text-lg mb-1">هل تعلم يا بطل؟</h4>
+                        <p class="text-sm text-sky-100 leading-relaxed font-medium">
+                            قال رسول الله ﷺ: <span class="font-bold text-amber-200">"أَحَبُّ الأَعْمَالِ إِلَى اللَّهِ الصَّلاةُ عَلَى وَقْتِهَا"</span>. عندما تصلي في وقتها، يحبك الله وتكون شجاعاً وقوياً!
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- TAB 2: CHALLENGES & BADGES (التحديات والأوسمة) -->
+        <section id="tab-badges" class="hidden space-y-5">
+            <!-- Level Header Card -->
+            <div class="glass-card rounded-3xl p-6 shadow-xl border border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center gap-4 text-center md:text-right">
+                        <div id="level-badge-icon" class="w-20 h-20 bg-amber-400 rounded-3xl flex items-center justify-center text-4xl shadow-lg border-4 border-white animate-float">
+                            🌱
+                        </div>
+                        <div>
+                            <span class="text-xs font-black bg-amber-200 text-amber-900 px-3 py-1 rounded-full">المستوى الحالي</span>
+                            <h2 id="level-title" class="text-2xl font-black text-amber-950 mt-1">المصلي المبتدئ</h2>
+                            <p class="text-xs text-amber-800 font-bold mt-1">اجمع المزيد من النجوم لترتقي إلى مستوى "بطل الصلاة الذهبي"! ⭐</p>
+                        </div>
+                    </div>
+
+                    <div class="text-center bg-white p-4 rounded-2xl border border-amber-200 shadow-sm w-full md:w-auto">
+                        <span class="text-xs text-slate-500 font-bold block">إجمالي النجوم المكتسبة</span>
+                        <div class="text-3xl font-black text-amber-500 flex items-center justify-center gap-1 mt-1">
+                            <span>⭐</span>
+                            <span id="badges-tab-stars">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Badges Grid Title -->
+            <div class="flex items-center justify-between px-1">
+                <h3 class="text-lg font-black text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-trophy text-amber-500"></i> أوسمة الشرف والتحديات
+                </h3>
+                <span class="text-xs font-bold text-slate-500" id="badges-unlocked-count">0 من 8 أوسمة</span>
+            </div>
+
+            <!-- Badges Grid Container -->
+            <div id="badges-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <!-- Dynamic Javascript Badges Rendering -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer Branding -->
+    <footer class="mt-8 text-center text-xs font-bold text-slate-500 max-w-4xl mx-auto px-4">
+        <div class="flex items-center justify-center gap-2 mb-1">
+            <div class="w-6 h-6 bg-white rounded-lg p-0.5 border border-slate-300 inline-block overflow-hidden">
+                <img src="7370.jpg" alt="LAC Tunisia Logo" class="w-full h-full object-contain rounded" onerror="this.style.display='none'">
+            </div>
+            <span class="font-black text-slate-700">LAC TUNISIA © 2026</span>
+        </div>
+        <p>تطبيق "تحدي صلاتي" - مرافق الطفل الصغير للانتظام في الصلاة والارتقاء بالأخلاق</p>
+    </footer>
+
+    <!-- FIRST-TIME ONBOARDING MODAL (NAME, GENDER, AGE) -->
+    <div id="onboarding-modal" class="fixed inset-0 bg-emerald-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 text-center shadow-2xl border-4 border-sky-400 relative animate-float">
+            <div class="w-20 h-20 bg-white rounded-3xl flex items-center justify-center mx-auto shadow-lg border-4 border-emerald-400 p-1.5 mb-3 overflow-hidden">
+                <img src="7370.jpg" alt="LAC Logo" class="w-full h-full object-contain rounded-xl" onerror="this.src='https://ui-avatars.com/api/?name=LAC&background=169b62&color=fff&font-size=0.4'">
+            </div>
+            <h3 class="text-2xl font-black text-emerald-950">أهلاً بك في تحدي صلاتي! ✨</h3>
+            <p class="text-xs text-slate-600 font-bold mt-1 mb-5">دعنا نتعرف عليك يا بطل لنبدأ رحلة الأسبوع الممتعة مع LAC TUNISIA!</p>
+
+            <form onsubmit="app.completeOnboarding(event)" class="space-y-4 text-right">
+                <!-- Child Name -->
+                <div>
+                    <label class="block text-xs font-black text-slate-700 mb-1">اسم البطل / البطلة: <span class="text-rose-500">*</span></label>
+                    <input type="text" id="onboard-name" required class="w-full px-4 py-3 rounded-2xl border-2 border-slate-200 focus:border-emerald-500 focus:outline-none font-black text-slate-800 text-sm" placeholder="اكتب اسمك">
+                </div>
+
+                <!-- Child Gender -->
+                <div>
+                    <label class="block text-xs font-black text-slate-700 mb-1">الجنس: <span class="text-rose-500">*</span></label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button type="button" id="gender-btn-boy" onclick="app.setOnboardGender('boy')" class="p-3 bg-slate-50 border-2 border-slate-200 rounded-2xl font-black text-slate-700 flex items-center justify-center gap-2 hover:bg-emerald-50 transition">
+                            <span class="text-2xl">👦</span> ولد
+                        </button>
+                        <button type="button" id="gender-btn-girl" onclick="app.setOnboardGender('girl')" class="p-3 bg-slate-50 border-2 border-slate-200 rounded-2xl font-black text-slate-700 flex items-center justify-center gap-2 hover:bg-emerald-50 transition">
+                            <span class="text-2xl">👧</span> بنت
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Child Age (6 to 10) -->
+                <div>
+                    <label class="block text-xs font-black text-slate-700 mb-1">العمر (من 6 إلى 10 سنوات): <span class="text-rose-500">*</span></label>
+                    <select id="onboard-age" required class="w-full px-4 py-3 rounded-2xl border-2 border-slate-200 focus:border-emerald-500 focus:outline-none font-black text-slate-800 text-sm bg-white">
+                        <option value="6">6 سنوات</option>
+                        <option value="7" selected>7 سنوات</option>
+                        <option value="8">8 سنوات</option>
+                        <option value="9">9 سنوات</option>
+                        <option value="10">10 سنوات</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-amber-950 font-black rounded-2xl shadow-xl text-base transition transform active:scale-95 mt-2">
+                    ابدأ التحدي الآن! 🚀
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- PROFILE & AVATAR EDIT MODAL -->
+    <div id="profile-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border-4 border-emerald-400 relative">
+            <button onclick="app.closeProfileModal()" class="absolute top-4 left-4 w-9 h-9 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-full flex items-center justify-center font-black">
+                ✕
+            </button>
+            
+            <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                <div class="w-10 h-10 bg-emerald-50 rounded-xl p-1 border border-emerald-200 shrink-0 overflow-hidden">
+                    <img src="7370.jpg" alt="LAC Logo" class="w-full h-full object-contain rounded-lg" onerror="this.src='https://ui-avatars.com/api/?name=LAC&background=169b62&color=fff'">
+                </div>
+                <div>
+                    <h3 class="text-lg font-black text-emerald-950">⚙️ تعديل ملف البطل</h3>
+                    <p class="text-[11px] font-bold text-slate-500">تحديث البيانات والشخصيات المفضلة</p>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-black text-slate-700 mb-1">اسم البطل الصغير:</label>
+                    <input type="text" id="input-child-name" class="w-full px-4 py-3 rounded-2xl border-2 border-slate-200 focus:border-emerald-500 focus:outline-none font-extrabold text-slate-800 text-sm" placeholder="اكتب اسمك">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-black text-slate-700 mb-1">الجنس:</label>
+                        <select id="input-child-gender" onchange="app.onGenderChangeProfile(this.value)" class="w-full px-3 py-2.5 rounded-2xl border-2 border-slate-200 font-bold text-sm bg-white">
+                            <option value="boy">ولد 👦</option>
+                            <option value="girl">بنت 👧</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-black text-slate-700 mb-1">العمر:</label>
+                        <select id="input-child-age" class="w-full px-3 py-2.5 rounded-2xl border-2 border-slate-200 font-bold text-sm bg-white">
+                            <option value="6">6 سنوات</option>
+                            <option value="7">7 سنوات</option>
+                            <option value="8">8 سنوات</option>
+                            <option value="9">9 سنوات</option>
+                            <option value="10">10 سنوات</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-black text-slate-700 mb-2">اختر الشخصية المفضلة:</label>
+                    <div class="grid grid-cols-5 gap-2" id="avatar-selector-grid">
+                        <button onclick="app.selectAvatar('👦')" class="avatar-option p-3 text-3xl bg-slate-50 hover:bg-emerald-100 rounded-2xl border-2 border-slate-200 flex items-center justify-center transition">👦</button>
+                        <button onclick="app.selectAvatar('👧')" class="avatar-option p-3 text-3xl bg-slate-50 hover:bg-emerald-100 rounded-2xl border-2 border-slate-200 flex items-center justify-center transition">👧</button>
+                        <button onclick="app.selectAvatar('🦁')" class="avatar-option p-3 text-3xl bg-slate-50 hover:bg-emerald-100 rounded-2xl border-2 border-slate-200 flex items-center justify-center transition">🦁</button>
+                        <button onclick="app.selectAvatar('🚀')" class="avatar-option p-3 text-3xl bg-slate-50 hover:bg-emerald-100 rounded-2xl border-2 border-slate-200 flex items-center justify-center transition">🚀</button>
+                        <button onclick="app.selectAvatar('👑')" class="avatar-option p-3 text-3xl bg-slate-50 hover:bg-emerald-100 rounded-2xl border-2 border-slate-200 flex items-center justify-center transition">👑</button>
+                    </div>
+                </div>
+
+                <!-- Parents Reset Option -->
+                <div class="pt-3 border-t border-slate-100">
+                    <button onclick="app.resetAllData()" class="w-full py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold rounded-2xl text-xs transition flex items-center justify-center gap-1">
+                        <i class="fa-solid fa-rotate-right"></i> إعادة ضبط البيانات (ركن الوالدين)
+                    </button>
+                </div>
+
+                <button onclick="app.saveProfile()" class="w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-black rounded-2xl shadow-lg text-base transition transform active:scale-95">
+                    حفظ التغييرات ✨
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- BADGE UNLOCKED CELEBRATION MODAL -->
+    <div id="badge-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl border-4 border-amber-400 relative transform animate-bounce-slow">
+            <div class="w-24 h-24 bg-amber-100 rounded-full flex items-center justify-center text-6xl mx-auto border-4 border-amber-400 shadow-inner mb-3" id="unlocked-badge-icon">
+                🏆
+            </div>
+            <span class="text-xs font-black bg-amber-400 text-amber-950 px-3 py-1 rounded-full uppercase tracking-wider">وسام جديد!</span>
+            <h3 id="unlocked-badge-title" class="text-2xl font-black text-slate-800 mt-2">بطل الصلاة اليومي</h3>
+            <p id="unlocked-badge-desc" class="text-xs text-slate-600 font-bold mt-1">لقد أكملت جميع الصلوات الخمس اليوم! أنت رائع جداً!</p>
+            <button onclick="app.closeBadgeModal()" class="mt-5 w-full py-3 bg-amber-500 hover:bg-amber-600 text-amber-950 font-black rounded-2xl shadow-lg transition text-base">
+                مذهل! شكراً لك 🎉
+            </button>
+        </div>
+    </div>
+
+    <!-- FINALIZE DAY CONFIRMATION MODAL -->
+    <div id="finalize-modal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl border-4 border-amber-400 relative">
+            <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-3 border-2 border-amber-300">
+                🔒
+            </div>
+            <h3 class="text-xl font-black text-slate-800 mb-2">إغلاق وحفظ اليوم؟</h3>
+            <p id="finalize-modal-desc" class="text-xs text-slate-600 font-bold mb-5 leading-relaxed">
+                عند حفظ اليوم وإغلاقه، لن تتمكن من العودة لتعديل صلوات هذا اليوم بعد الآن يا بطل! 🌟
+            </p>
+            <div class="flex gap-2">
+                <button onclick="app.confirmFinalizeDay()" class="flex-1 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-black rounded-2xl shadow-md text-sm transition transform active:scale-95">
+                    تأكيد والحفظ 🔒
+                </button>
+                <button onclick="app.closeFinalizeModal()" class="px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-2xl text-xs transition">
+                    إلغاء
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast-notification" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 hidden bg-emerald-900/90 backdrop-blur-md text-white px-5 py-3 rounded-2xl shadow-2xl border-2 border-emerald-400 flex items-center gap-3 transition-all duration-300">
+        <span id="toast-icon" class="text-xl">💾</span>
+        <span id="toast-message" class="text-xs font-black">تم الحفظ بنجاح!</span>
+    </div>
+
+    <script>
+        const DAYS_NAMES = ['الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت', 'الأحد'];
+
+        const PRAYERS_CONFIG = [
+            { id: 'fajr', name: 'صلاة الفجر', rakat: 'ركعتان', timeStr: 'الفجر', icon: '🌅', stars: 10, quote: 'من صلى الفجر فهو في ذمة الله!' },
+            { id: 'dhuhr', name: 'صلاة الظهر', rakat: '4 ركعات', timeStr: 'الظهر', icon: '☀️', stars: 10, quote: 'صلاة الظهر تملأ يومك بالبركة والنور!' },
+            { id: 'asr', name: 'صلاة العصر', rakat: '4 ركعات', timeStr: 'العصر', icon: '🌤️', stars: 10, quote: 'حافظ على صلاة العصر لتكون من الفائزين!' },
+            { id: 'maghrib', name: 'صلاة المغرب', rakat: '3 ركعات', timeStr: 'المغرب', icon: '
